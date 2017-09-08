@@ -1,0 +1,9 @@
+[package]
+name = "pe2"
+version = "0.1.0"
+authors = ["Hugh Richardson <hugh@jet.com>"]
+
+[dependencies]
+stopwatch = "0.0.7"
+num = "0.1.40"
+num-traits = "0.1.40"
