@@ -18,13 +18,13 @@ fn main() {
     assert_eq!(pe11(), 70600674);
     assert_eq!(pe12(), 76576500);
     assert_eq!(pe13(), String::from("5537376230"));
-    //assert_eq!(pe14(), 837799);
+    assert_eq!(pe14(), 837799);
     assert_eq!(pe15(), 137846528820);
     assert_eq!(pe16(), 1366);
     assert_eq!(pe17(), 	21124);
     assert_eq!(pe18(String::from("nums3.txt")), 1074);
     assert_eq!(pe19(), 171);
-    println!("pe19: {}", pe19());
+    assert_eq!(pe20(), 648);
 }
 
 // maximum product of diagonal of 4
@@ -313,12 +313,21 @@ fn pe15() -> u64 {
     nums.pop().unwrap()
 }
 
+fn sum_chars(x: BigUint) -> i32 {
+    x.to_string()
+    .chars()
+    .map(|d| d.to_string().parse::<i32>().unwrap())
+    .sum()
+}
+
+// sum of digits in number 2 to power 1000
 fn pe16() -> i32 {
-    let mut x: BigUint = One::one();
-    for _ in 1..1001 {
-        x = 2.to_biguint().unwrap() * x;
-    }
-    x.to_string().chars().map(|d| d.to_string().parse::<i32>().unwrap()).sum()
+    let two = 2.to_biguint().unwrap();
+    let two_to_thousand =
+        (0..1000)
+        .fold(One::one(), |acc, _| acc * two.clone());
+
+    sum_chars(two_to_thousand)
 }
 
 // letters use in one two ..... one thousand
@@ -347,7 +356,7 @@ fn pe18(file_name: String) -> i32 {
     let sw = Stopwatch::start_new();
     let triangle: Vec<Vec<i32>> = triangle_from_file(file_name);
     let ans = find_max(triangle);
-    println!("Ans {}, took {} ms", ans, sw.elapsed_ms());
+    //println!("Ans {}, took {} ms", ans, sw.elapsed_ms());
     ans
 }
 
@@ -404,4 +413,14 @@ fn pe19() -> i32 {
 fn is_leap_year(year: i32) -> bool {
     (year % 400 == 0) ||
     (year % 100 != 0 && year % 4 == 0)
+}
+
+
+// sum digits of 100!
+fn pe20() -> i32 {
+    let one_hundred_factorial =
+        (1..101)
+        .fold(One::one(), |acc, x| acc * x.to_biguint().unwrap());
+
+    sum_chars(one_hundred_factorial)
 }
