@@ -11,7 +11,6 @@ use std::fs::File;
 use std::path::Path;
 use std::cmp;
 use stopwatch::{Stopwatch};
-//use std::collections::{HashMap};
 
 
 fn main() {
@@ -21,10 +20,11 @@ fn main() {
     assert_eq!(pe14(), 837799);
     assert_eq!(pe15(), 137846528820);
     assert_eq!(pe16(), 1366);
-    assert_eq!(pe17(), 	21124);
+    assert_eq!(pe17(), 21124);
     assert_eq!(pe18(String::from("nums3.txt")), 1074);
     assert_eq!(pe19(), 171);
     assert_eq!(pe20(), 648);
+    println!("Great success!");
 }
 
 // maximum product of diagonal of 4
@@ -52,7 +52,7 @@ fn pe11() -> u64 {
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48";
 
     let grid_arr: Vec<u64> =
-        grid_string.split(" ")
+        grid_string.split_whitespace()
         .map(|x| x.parse().unwrap()).collect();
 
     let mut grid: [[u64; 20]; 20] = [[0; 20]; 20];
@@ -153,11 +153,13 @@ fn tn(stop_count:u64) -> u64 {
 }
 
 
+// first trianle number to have over five hundred divisors?
 fn pe12() -> u64 {
     tn(500)
 }
 
 
+// first ten digits of sum of one hundred 50-digit numbers
 fn pe13() -> String {
     let input = "37107287533902102798797998220837590246510135740250
 46376937677490009712648124896970078050417018260538
@@ -313,15 +315,15 @@ fn pe15() -> u64 {
     nums.pop().unwrap()
 }
 
-fn sum_chars(x: BigUint) -> i32 {
+fn sum_chars(x: BigUint) -> u32 {
     x.to_string()
     .chars()
-    .map(|d| d.to_string().parse::<i32>().unwrap())
+    .map(|d| d.to_string().parse::<u32>().unwrap())
     .sum()
 }
 
 // sum of digits in number 2 to power 1000
-fn pe16() -> i32 {
+fn pe16() -> u32 {
     let two = 2.to_biguint().unwrap();
     let two_to_thousand =
         (0..1000)
@@ -331,7 +333,7 @@ fn pe16() -> i32 {
 }
 
 // letters use in one two ..... one thousand
-fn pe17() -> i32 {
+fn pe17() -> u32 {
     //let zero: u64 = 0;
     let singles = [3, 3, 5, 4, 4, 3, 5, 5, 4]; // length of words one.. numbers_from_line
     let teens = [3, 6, 6, 8, 8, 7, 7, 9, 8, 8]; // ten .. nineteen
@@ -340,10 +342,10 @@ fn pe17() -> i32 {
     let thousand = 8;
     let and = 3;
 
-    let singles_sum: i32 = singles.iter().sum(); // 1 - 9
-    let teens_sum: i32 = teens.iter().sum(); // ten to nineteen
+    let singles_sum: u32 = singles.iter().sum(); // 1 - 9
+    let teens_sum: u32 = teens.iter().sum(); // ten to nineteen
     let tens_sum =
-        tens.iter().fold(0, |acc, x| (10 * x) + singles_sum + acc); // twenty to ninety ninety
+        tens.iter().fold(0, |acc, x| (10 as u32 * x) + singles_sum + acc); // twenty to ninety ninety
     let one_to_ninety_nine = singles_sum + teens_sum + tens_sum;
     let one_hundred_to_one_hundred_and_ninety_nine =
         singles.iter().fold(0, |acc, x| (100 * (x + hundred)) + (99 * and) + one_to_ninety_nine + acc);
@@ -352,15 +354,15 @@ fn pe17() -> i32 {
 }
 
 // pe67 too
-fn pe18(file_name: String) -> i32 {
+fn pe18(file_name: String) -> u32 {
     let sw = Stopwatch::start_new();
-    let triangle: Vec<Vec<i32>> = triangle_from_file(file_name);
+    let triangle: Vec<Vec<u32>> = triangle_from_file(file_name);
     let ans = find_max(triangle);
     //println!("Ans {}, took {} ms", ans, sw.elapsed_ms());
     ans
 }
 
-fn find_max(triangle: Vec<Vec<i32>>) -> i32 {
+fn find_max(triangle: Vec<Vec<u32>>) -> u32 {
     let last_index = triangle.len() - 1 ;
     let first = triangle[last_index].clone();
     let ans =
@@ -371,27 +373,27 @@ fn find_max(triangle: Vec<Vec<i32>>) -> i32 {
     ans[0]
 }
 
-fn reduce_levels(r1: &Vec<i32>, r2: &Vec<i32>) -> Vec<i32> {
+fn reduce_levels(r1: &Vec<u32>, r2: &Vec<u32>) -> Vec<u32> {
     r1.windows(2)
     .zip(r2)
     .map(|(arr, c)| c + cmp::max(arr[0],arr[1]))
     .collect()
 }
 
-fn numbers_from_line(s: String) -> Vec<i32> {
-    s.split(" ")
+fn numbers_from_line(s: String) -> Vec<u32> {
+    s.split_whitespace()
     .map(|x| x.parse().expect("input not an integer"))
     .collect()
 }
 
-fn triangle_from_file<P>(filename: P) -> Vec<Vec<i32>> where P: AsRef<Path> {
+fn triangle_from_file<P>(filename: P) -> Vec<Vec<u32>> where P: AsRef<Path> {
     let file = File::open(filename).expect("no file found");
     let buf = BufReader::new(file);
     buf.lines().map(|l| numbers_from_line(l.expect("could not parse line"))).collect()
 }
 
 // how many sundays fell on the first of the month? 1 Jan 1901 to 31 Dec 2000
-fn pe19() -> i32 {
+fn pe19() -> u32 {
     let dims = [31,28,31,30,31,30,31,31,30,31,30,31];
     // Jan 1 1900 - monday
     let mut days = 0;
@@ -410,14 +412,14 @@ fn pe19() -> i32 {
     ans
 }
 
-fn is_leap_year(year: i32) -> bool {
+fn is_leap_year(year: u32) -> bool {
     (year % 400 == 0) ||
     (year % 100 != 0 && year % 4 == 0)
 }
 
 
 // sum digits of 100!
-fn pe20() -> i32 {
+fn pe20() -> u32 {
     let one_hundred_factorial =
         (1..101)
         .fold(One::one(), |acc, x| acc * x.to_biguint().unwrap());
